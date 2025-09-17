@@ -1,0 +1,6 @@
+# Trinexial Technologies Mock Aptitude Test - Requirements
+# Install with: pip install -r requirements.txt
+
+# Email functionality
+# Note: You'll need to set up Gmail App Password for email sending
+# Instructions: https://support.google.com/accounts/answer/185833

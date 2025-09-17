@@ -49,7 +49,7 @@
 
   // Question Bank (Electronics + Aptitude)
   const QUESTIONS = [
-    { c: "Digital Electronics", q: "In a 4-bit 2’s complement system, what is the representation of -5?", options: ["1010", "1101", "1011", "0110"], a: 2, exp: "-5 = 16 - 5 = 11(dec) = 1011(2) in 4-bit 2's complement." },
+    { c: "Digital Electronics", q: "In a 4-bit 2's complement system, what is the representation of -5?", options: ["1010", "1101", "1011", "0110"], a: 2, exp: "-5 = 16 - 5 = 11(dec) = 1011(2) in 4-bit 2's complement." },
     { c: "Digital Electronics", q: "The output of a NAND gate is 0 only when:", options: ["All inputs are 0", "All inputs are 1", "Any input is 0", "Inputs are different"], a: 1 },
     { c: "VLSI", q: "In CMOS, dynamic power is proportional primarily to:", options: ["Leakage current", "Short-circuit current", "C·V^2·f", "Gate length"], a: 2 },
     { c: "VLSI", q: "The channel in an NMOS forms when:", options: ["Vgs < Vth", "Vgs > Vth", "Vds > Vth", "Body is forward-biased"], a: 1 },
@@ -280,7 +280,7 @@
     if (ok) submitTest();
   });
 
-  function submitTest() {
+  async function submitTest() {
     clearInterval(state.timerId);
     try { exitFullscreen(); } catch {}
     // Stop tracks
@@ -300,15 +300,44 @@
     rsScore.textContent = `Score: ${score} / ${total}`;
     rsDetail.textContent = `Sections included: Digital Electronics, VLSI, DSP, DC (Circuits), Aptitude.`;
 
-    // Persist minimal log locally
+    // Send data to backend for email
     const payload = {
-      user: state.user,
+      name: state.user?.name || '',
+      email: state.user?.email || '',
+      roll: state.user?.roll || '',
       score,
       total,
       answers: state.answers,
-      ts: new Date().toISOString(),
-      violations: state.violations
+      questions: QUESTIONS,
+      violations: state.violations,
+      timestamp: new Date().toISOString()
     };
+
+    try {
+      const response = await fetch('/submit-test', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        console.log('Test submitted successfully:', result.message);
+        // Update result message to show email status
+        const emailStatus = result.email_sent ? 'Scorecard will be sent to your email shortly.' : 'Email sending failed, but test was submitted.';
+        rsDetail.textContent += ` ${emailStatus}`;
+      } else {
+        console.error('Test submission failed:', result.message);
+        rsDetail.textContent += ` Note: ${result.message}`;
+      }
+    } catch (error) {
+      console.error('Error submitting test:', error);
+      rsDetail.textContent += ` Note: Unable to send email, but test was submitted locally.`;
+    }
+
+    // Persist minimal log locally as backup
     try {
       localStorage.setItem('trinexial_result', JSON.stringify(payload));
     } catch {}

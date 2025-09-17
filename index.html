@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trinexial Technologies — Mock Aptitude Test</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo">TT</div>
+        <div class="title">
+          <h1>Trinexial Technologies</h1>
+          <p class="subtitle">Proctored Mock Aptitude Test (MSB-style)</p>
+        </div>
+      </div>
+      <div class="status">
+        <span id="status-perms" class="badge muted">Permissions</span>
+        <span id="status-fullscreen" class="badge muted">Fullscreen</span>
+        <span id="status-proctor" class="badge muted">Proctoring</span>
+        <span id="status-timer" class="badge primary">00:00</span>
+        <span id="status-violations" class="badge warn">Violations: 0</span>
+      </div>
+    </header>
+
+    <!-- Screens -->
+    <main class="main">
+      <!-- LOGIN -->
+      <section id="screen-login" class="screen active">
+        <h2>Login</h2>
+        <form id="login-form" class="card">
+          <div class="form-row">
+            <label for="name">Full Name</label>
+            <input id="name" name="name" type="text" placeholder="Enter your full name" required />
+          </div>
+          <div class="form-row">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="Enter your email" required />
+          </div>
+          <div class="form-row">
+            <label for="roll">Roll / Candidate ID (optional)</label>
+            <input id="roll" name="roll" type="text" placeholder="E.g. EE23-001" />
+          </div>
+          <button type="submit" class="btn primary">Continue</button>
+        </form>
+      </section>
+
+      <!-- CONSENT / PERMISSIONS -->
+      <section id="screen-consent" class="screen">
+        <h2>Permissions & Exam Rules</h2>
+        <div class="card">
+          <ol class="rules">
+            <li>The test is proctored. Camera and microphone access are required.</li>
+            <li>The test will run in fullscreen. Do not switch tabs or minimize the window.</li>
+            <li>Copy/paste, right-click, and opening new tabs are blocked.</li>
+            <li>Repeated violations may auto-submit your test.</li>
+          </ol>
+          <div class="consent">
+            <label class="checkbox">
+              <input type="checkbox" id="agree" />
+              <span>I agree to the rules and consent to camera/microphone usage for proctoring.</span>
+            </label>
+          </div>
+          <div class="actions">
+            <button id="btn-request" class="btn primary" disabled>Grant Permissions & Enter Fullscreen</button>
+          </div>
+          <div class="media-preview">
+            <div class="preview-item">
+              <h4>Camera Preview</h4>
+              <video id="camera" autoplay playsinline muted></video>
+            </div>
+            <div class="preview-item">
+              <h4>Microphone Level</h4>
+              <div class="meter"><div id="mic-level" class="meter-bar" style="width:0%"></div></div>
+              <small>Speak to see the level move.</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEST -->
+      <section id="screen-test" class="screen">
+        <div class="test-header">
+          <div>
+            <h2 id="q-title">Question</h2>
+            <p id="q-meta" class="muted"></p>
+          </div>
+          <div class="nav">
+            <button id="btn-prev" class="btn">Previous</button>
+            <button id="btn-next" class="btn">Next</button>
+            <button id="btn-submit" class="btn danger">Submit</button>
+          </div>
+        </div>
+        <div id="q-body" class="card">
+          <div id="q-text" class="q-text"></div>
+          <div id="q-options" class="q-options"></div>
+        </div>
+      </section>
+
+      <!-- RESULT -->
+      <section id="screen-result" class="screen">
+        <h2>Test Submitted</h2>
+        <div class="card result">
+          <p id="rs-name"></p>
+          <p id="rs-email"></p>
+          <p id="rs-score" class="score"></p>
+          <p id="rs-detail"></p>
+          <hr />
+          <p><strong>You will get the mail soon</strong> with your detailed report and next steps.</p>
+          <button id="btn-restart" class="btn">Back to Start</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
